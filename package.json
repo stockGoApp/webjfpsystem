@@ -1,0 +1,12 @@
+{
+  "name": "jfpsystem-landing",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Landing de pre-lanzamiento de JFPSYSTEM (Flowtock + EatTock)",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

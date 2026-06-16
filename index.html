@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- ============================================================
+       JFPSYSTEM · Landing de pre-lanzamiento (Flowtock + EatTock)
+       Stack: HTML5 + CSS3 (Grid/Flexbox) + JS vanilla. Sin frameworks.
+       Animaciones de scroll con IntersectionObserver. 100% responsive.
+       Contenido extraído de las presentaciones reales de cada producto.
+       ============================================================ -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="JFPSYSTEM presenta Flowtock (ERP en la nube) y EatTock (suite para restaurantes). Software peruano hecho a medida. Únete a la lista de espera y reclama tu oferta de lanzamiento." />
+  <meta name="theme-color" content="#0b0a1f" />
+  <meta name="author" content="JFPSYSTEM" />
+
+  <!-- Open Graph / social -->
+  <meta property="og:title" content="JFPSYSTEM · Flowtock + EatTock" />
+  <meta property="og:description" content="Dos productos que digitalizan tu empresa y tu restaurante. Acceso anticipado abierto." />
+  <meta property="og:type" content="website" />
+
+  <title>JFPSYSTEM · Flowtock + EatTock — Acceso anticipado</title>
+
+  <!-- Favicon embebido (SVG inline) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%235048e5'/><text x='50' y='70' font-size='62' font-family='Arial' font-weight='bold' fill='white' text-anchor='middle'>J</text></svg>" />
+
+  <!-- Tipografía -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+  /* =====================================================
+     1. TOKENS DE DISEÑO
+     ===================================================== */
+  :root{
+    /* Marca JFPSYSTEM */
+    --ink:#0b0a1f;            /* fondo casi negro/morado */
+    --ink-2:#13112e;
+    --surface:#ffffff;
+    --muted:#9aa0b4;
+    --line:rgba(255,255,255,.10);
+
+    /* Flowtock (indigo + cyan) */
+    --flow:#5048e5;
+    --flow-2:#06b6d4;
+    --flow-soft:rgba(80,72,229,.14);
+
+    /* EatTock (ámbar + coral, calidez gastronómica) */
+    --eat:#f97316;
+    --eat-2:#ef4444;
+    --eat-soft:rgba(249,115,22,.14);
+
+    --ok:#10b981;
+    --warn:#f59e0b;
+    --danger:#ef4444;
+
+    --radius:18px;
+    --maxw:1180px;
+    --shadow:0 24px 60px rgba(0,0,0,.45);
+    --ease:cubic-bezier(.2,.7,.2,1);
+  }
+
+  /* =====================================================
+     2. RESET / BASE
+     ===================================================== */
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;scroll-padding-top:74px;}
+  body{
+    font-family:'Inter',-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background:var(--ink);
+    color:#e8e9f3;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  ul{list-style:none;}
+  section{position:relative;}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+
+  .eyebrow{
+    display:inline-block;font-size:12px;font-weight:800;letter-spacing:2.5px;
+    text-transform:uppercase;margin-bottom:14px;
+  }
+  h1,h2,h3{letter-spacing:-.02em;line-height:1.08;color:#fff;font-weight:800;}
+  h2.section-title{font-size:clamp(28px,5vw,46px);font-weight:900;}
+  .lead{color:#b6b9cc;font-size:clamp(15px,2.4vw,18px);max-width:620px;line-height:1.65;}
+
+  /* gradientes de texto reutilizables */
+  .grad-flow{background:linear-gradient(90deg,var(--flow),var(--flow-2));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .grad-eat{background:linear-gradient(90deg,var(--eat),var(--eat-2));-webkit-background-clip:text;background-clip:text;color:transparent;}
+
+  /* =====================================================
+     3. BOTONES
+     ===================================================== */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;
+    font-weight:800;font-size:15px;padding:14px 26px;border-radius:40px;
+    cursor:pointer;border:none;transition:transform .25s var(--ease),box-shadow .25s var(--ease),background .25s;
+    white-space:nowrap;font-family:inherit;
+  }
+  .btn:hover{transform:translateY(-2px);}
+  .btn-flow{background:linear-gradient(135deg,var(--flow),var(--flow-2));color:#fff;box-shadow:0 12px 30px rgba(80,72,229,.45);}
+  .btn-eat{background:linear-gradient(135deg,var(--eat),var(--eat-2));color:#fff;box-shadow:0 12px 30px rgba(249,115,22,.4);}
+  .btn-ghost{background:rgba(255,255,255,.06);color:#fff;border:1.5px solid rgba(255,255,255,.22);}
+  .btn-ghost:hover{background:rgba(255,255,255,.12);}
+  .btn-light{background:#fff;color:var(--ink);}
+
+  /* =====================================================
+     4. NAVBAR
+     ===================================================== */
+  header.nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    backdrop-filter:blur(14px);background:rgba(11,10,31,.6);
+    border-bottom:1px solid var(--line);transition:background .3s;
+  }
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px;}
+  .brand{display:flex;align-items:center;gap:11px;font-weight:900;font-size:18px;color:#fff;}
+  .brand .mark{
+    width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+    font-weight:900;color:#fff;background:linear-gradient(135deg,var(--flow),var(--flow-2));
+    box-shadow:0 6px 16px rgba(80,72,229,.4);
+  }
+  .brand small{display:block;font-size:9px;font-weight:600;letter-spacing:2px;color:var(--muted);}
+  .nav-links{display:flex;align-items:center;gap:28px;}
+  .nav-links a{font-size:14px;font-weight:600;color:#c9ccdc;transition:color .2s;}
+  .nav-links a:hover{color:#fff;}
+  .nav-cta{padding:10px 20px;font-size:13px;}
+  .burger{display:none;background:none;border:none;cursor:pointer;flex-direction:column;gap:5px;padding:8px;}
+  .burger span{width:24px;height:2px;background:#fff;border-radius:2px;transition:.3s;}
+
+  /* =====================================================
+     5. HERO
+     ===================================================== */
+  .hero{padding:150px 0 90px;text-align:center;overflow:hidden;}
+  /* fondo abstracto tecnológico */
+  .hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden;}
+  .hero-bg .glow{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55;animation:float 14s ease-in-out infinite;}
+  .hero-bg .g1{width:520px;height:520px;background:radial-gradient(circle,var(--flow),transparent 65%);top:-160px;left:-120px;}
+  .hero-bg .g2{width:480px;height:480px;background:radial-gradient(circle,var(--eat),transparent 65%);top:-80px;right:-140px;animation-delay:-5s;}
+  .hero-bg .g3{width:420px;height:420px;background:radial-gradient(circle,var(--flow-2),transparent 65%);bottom:-200px;left:40%;animation-delay:-9s;}
+  .hero-bg .grid-lines{
+    position:absolute;inset:0;
+    background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);
+    background-size:54px 54px;
+    mask-image:radial-gradient(ellipse 80% 60% at 50% 30%,#000,transparent 75%);
+    -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 30%,#000,transparent 75%);
+  }
+  @keyframes float{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,-30px)}}
+
+  .hero-inner{position:relative;z-index:2;}
+  .hero .badge{
+    display:inline-flex;align-items:center;gap:9px;font-size:13px;font-weight:700;
+    padding:8px 18px;border-radius:30px;background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.16);margin-bottom:28px;color:#dfe2f0;
+  }
+  .hero .badge .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 rgba(16,185,129,.6);animation:pulse 2s infinite;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(16,185,129,.55)}70%{box-shadow:0 0 0 12px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
+
+  .hero h1{font-size:clamp(38px,8vw,76px);font-weight:900;letter-spacing:-.03em;}
+  .hero .sub{margin:26px auto 0;max-width:660px;font-size:clamp(16px,2.6vw,21px);color:#c5c8db;line-height:1.6;}
+  .hero-cta{display:flex;gap:16px;justify-content:center;margin-top:40px;flex-wrap:wrap;}
+
+  /* fila de logos / prueba social */
+  .hero-proof{margin-top:54px;display:flex;flex-wrap:wrap;gap:14px 40px;justify-content:center;align-items:center;color:var(--muted);font-size:13px;font-weight:600;}
+  .hero-proof b{color:#fff;}
+
+  /* =====================================================
+     6. SECCIÓN JFPSYSTEM (banda de confianza)
+     ===================================================== */
+  .trust{padding:60px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(255,255,255,.02);}
+  .trust-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:50px;align-items:center;}
+  .trust-grid p.big{font-size:clamp(18px,3vw,24px);color:#eef0fa;font-weight:600;line-height:1.5;}
+  .trust-grid p.big b{color:#fff;}
+  .trust-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;}
+  .trust-stats .n{font-size:34px;font-weight:900;}
+  .trust-stats .l{font-size:13px;color:var(--muted);font-weight:600;margin-top:2px;}
+
+  /* =====================================================
+     7. SECCIONES DE PRODUCTO
+     ===================================================== */
+  .product{padding:100px 0;}
+  .product-head{max-width:720px;margin-bottom:50px;}
+  .product-logo{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+  .product-logo .mark{
+    width:54px;height:54px;border-radius:15px;display:flex;align-items:center;justify-content:center;
+    font-size:27px;font-weight:900;color:#fff;
+  }
+  .flow .product-logo .mark{background:linear-gradient(135deg,var(--flow),var(--flow-2));box-shadow:0 10px 26px rgba(80,72,229,.45);}
+  .eat .product-logo .mark{background:linear-gradient(135deg,var(--eat),var(--eat-2));box-shadow:0 10px 26px rgba(249,115,22,.4);}
+  .product-logo .name{font-size:30px;font-weight:900;color:#fff;}
+  .product-logo .name small{display:block;font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);}
+  .tagline{font-size:clamp(24px,4.5vw,40px);font-weight:900;color:#fff;margin-bottom:16px;line-height:1.1;}
+
+  /* tarjeta de problema (¿qué pasa si no lo usas?) */
+  .pain{
+    border-left:3px solid var(--danger);background:rgba(239,68,68,.07);
+    border-radius:0 12px 12px 0;padding:16px 20px;margin:22px 0;max-width:640px;
+  }
+  .pain b{color:#fff;}
+  .pain .pain-t{font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#fda4af;margin-bottom:5px;}
+
+  /* grid de beneficios */
+  .benefits{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin:40px 0;}
+  .bcard{
+    background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:var(--radius);
+    padding:26px 22px;transition:transform .3s var(--ease),border-color .3s,background .3s;
+  }
+  .bcard:hover{transform:translateY(-6px);background:rgba(255,255,255,.06);}
+  .flow .bcard:hover{border-color:rgba(80,72,229,.5);}
+  .eat .bcard:hover{border-color:rgba(249,115,22,.5);}
+  .bcard .ic{
+    width:50px;height:50px;border-radius:13px;display:flex;align-items:center;justify-content:center;
+    font-size:25px;margin-bottom:16px;
+  }
+  .flow .bcard .ic{background:var(--flow-soft);}
+  .eat .bcard .ic{background:var(--eat-soft);}
+  .bcard h4{font-size:17px;color:#fff;margin-bottom:7px;font-weight:800;}
+  .bcard p{font-size:14px;color:#aab0c4;line-height:1.55;}
+
+  /* bloque funcionalidades + visual */
+  .feat-row{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;margin-top:30px;}
+  .feat-list{display:grid;gap:13px;}
+  .feat-list li{display:flex;gap:13px;align-items:flex-start;font-size:15px;color:#d3d6e6;line-height:1.5;}
+  .feat-list .chk{
+    flex-shrink:0;width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+    font-weight:900;font-size:13px;color:#fff;margin-top:1px;
+  }
+  .flow .feat-list .chk{background:linear-gradient(135deg,var(--flow),var(--flow-2));}
+  .eat .feat-list .chk{background:linear-gradient(135deg,var(--eat),var(--eat-2));}
+  .feat-list li b{color:#fff;}
+
+  /* mockup tipo app (visual) */
+  .mock{
+    border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.12);
+    box-shadow:var(--shadow);background:#fff;color:#1f2937;
+  }
+  .mock .bar{height:34px;background:#f1f2f6;display:flex;align-items:center;gap:6px;padding:0 14px;border-bottom:1px solid #e5e7eb;}
+  .mock .bar i{width:10px;height:10px;border-radius:50%;}
+  .mock .bar .r{background:#ff5f57}.mock .bar .y{background:#febc2e}.mock .bar .g{background:#28c840}
+  .mock .bar .url{margin-left:10px;font-size:10px;color:#6b7280;background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:3px 12px;}
+  .mock-body{padding:18px;background:#f8fafc;}
+  .mock-h{font-size:14px;font-weight:800;color:#1e1b4b;margin-bottom:14px;}
+  .kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px;}
+  .kpi{background:#fff;border:1px solid #e5e7eb;border-radius:11px;padding:12px 14px;}
+  .kpi .l{font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#9ca3af;font-weight:800;}
+  .kpi .v{font-size:19px;font-weight:900;color:#1e1b4b;margin-top:4px;}
+  .kpi .d{font-size:11px;font-weight:800;margin-top:2px;}
+  .kpi .d.up{color:var(--ok);} .kpi .d.dn{color:var(--danger);}
+  .mock .bars{display:flex;align-items:flex-end;gap:7px;height:90px;background:#fff;border:1px solid #e5e7eb;border-radius:11px;padding:12px;}
+  .mock .bars .bc{flex:1;border-radius:5px 5px 0 0;transition:height 1s var(--ease);}
+  .flow .mock .bars .bc{background:linear-gradient(180deg,var(--flow),var(--flow-2));}
+  .eat .mock .bars .bc{background:linear-gradient(180deg,var(--eat),var(--eat-2));}
+
+  /* chips de módulos */
+  .chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:26px;}
+  .chip{font-size:13px;font-weight:700;padding:8px 15px;border-radius:30px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:#cfd2e2;}
+  .flow .chip{border-color:rgba(80,72,229,.3);}
+  .eat .chip{border-color:rgba(249,115,22,.3);}
+
+  /* franja de stats del producto */
+  .pstats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin:44px 0;text-align:center;}
+  .pstats .n{font-size:clamp(26px,4vw,40px);font-weight:900;}
+  .pstats .l{font-size:13px;color:var(--muted);font-weight:600;margin-top:4px;}
+
+  .product-cta{margin-top:34px;}
+
+  /* =====================================================
+     8. COMPARATIVA ANTES / DESPUÉS
+     ===================================================== */
+  .compare{padding:90px 0;background:rgba(255,255,255,.02);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .compare-head{text-align:center;max-width:680px;margin:0 auto 50px;}
+  .compare-head .lead{margin:14px auto 0;}
+  .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+  .ba-card{border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);}
+  .ba-col{padding:28px 26px;}
+  .ba-before{background:rgba(239,68,68,.06);}
+  .ba-after{background:rgba(16,185,129,.07);}
+  .ba-tag{font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+  .ba-before .ba-tag{color:#fca5a5;}
+  .ba-after .ba-tag{color:#6ee7b7;}
+  .ba-row{display:flex;gap:11px;align-items:flex-start;font-size:14.5px;padding:9px 0;color:#d3d6e6;border-bottom:1px solid rgba(255,255,255,.06);}
+  .ba-row:last-child{border-bottom:none;}
+  .ba-row .i{flex-shrink:0;font-size:15px;}
+  .ba-card .title{font-size:18px;font-weight:900;color:#fff;padding:18px 26px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;}
+  .mini-mark{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:#fff;}
+  .mini-flow{background:linear-gradient(135deg,var(--flow),var(--flow-2));}
+  .mini-eat{background:linear-gradient(135deg,var(--eat),var(--eat-2));}
+
+  /* =====================================================
+     9. FORMULARIO DE ESPERA
+     ===================================================== */
+  .waitlist{padding:100px 0;}
+  .form-shell{
+    max-width:760px;margin:0 auto;background:linear-gradient(160deg,rgba(80,72,229,.16),rgba(249,115,22,.10));
+    border:1px solid rgba(255,255,255,.14);border-radius:26px;padding:48px 44px;position:relative;overflow:hidden;
+  }
+  .form-shell::before{content:"";position:absolute;width:300px;height:300px;background:radial-gradient(circle,var(--flow),transparent 70%);filter:blur(70px);opacity:.4;top:-120px;right:-80px;}
+  .form-head{text-align:center;margin-bottom:34px;position:relative;}
+  .form-head h2{font-size:clamp(26px,4.5vw,38px);font-weight:900;}
+  .form-head p{color:#c8cbdd;margin-top:12px;font-size:16px;}
+  .scarcity{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#fed7aa;background:rgba(249,115,22,.14);border:1px solid rgba(249,115,22,.3);padding:7px 16px;border-radius:30px;margin-bottom:20px;}
+
+  form{position:relative;display:grid;gap:18px;}
+  .field label{display:block;font-size:13px;font-weight:700;color:#cfd2e2;margin-bottom:7px;}
+  .field input[type=text],.field input[type=email],.field select{
+    width:100%;padding:14px 16px;border-radius:12px;border:1.5px solid rgba(255,255,255,.16);
+    background:rgba(11,10,31,.5);color:#fff;font-size:15px;font-family:inherit;transition:border-color .2s;
+  }
+  .field input::placeholder{color:#6b7090;}
+  .field input:focus,.field select:focus{outline:none;border-color:var(--flow);}
+  .field input.invalid{border-color:var(--danger);background:rgba(239,68,68,.08);}
+  .field select option{background:#13112e;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .err-msg{color:#fca5a5;font-size:12.5px;font-weight:600;margin-top:6px;display:none;}
+  .field.has-error .err-msg{display:block;}
+
+  .checks-group{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .check-card{
+    display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:12px;
+    border:1.5px solid rgba(255,255,255,.14);background:rgba(11,10,31,.4);cursor:pointer;transition:.2s;
+  }
+  .check-card:hover{border-color:rgba(255,255,255,.3);}
+  .check-card input{width:19px;height:19px;accent-color:var(--flow);cursor:pointer;}
+  .check-card.flow-pick.on{border-color:var(--flow);background:rgba(80,72,229,.14);}
+  .check-card.eat-pick.on{border-color:var(--eat);background:rgba(249,115,22,.14);}
+  .check-card .cc-name{font-weight:800;color:#fff;font-size:15px;}
+  .check-card .cc-sub{font-size:11px;color:var(--muted);}
+
+  form .btn-submit{width:100%;font-size:16px;padding:17px;margin-top:6px;}
+  .form-note{text-align:center;font-size:12px;color:var(--muted);margin-top:4px;}
+
+  /* mensaje de éxito */
+  .success{display:none;text-align:center;padding:30px 10px;position:relative;}
+  .success.show{display:block;animation:pop .5s var(--ease);}
+  @keyframes pop{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+  .success .tick{width:74px;height:74px;border-radius:50%;background:linear-gradient(135deg,var(--ok),#34d399);display:flex;align-items:center;justify-content:center;font-size:38px;margin:0 auto 22px;box-shadow:0 14px 34px rgba(16,185,129,.45);}
+  .success h3{font-size:26px;font-weight:900;margin-bottom:12px;}
+  .success p{color:#c8cbdd;max-width:440px;margin:0 auto;}
+
+  /* =====================================================
+     10. FOOTER
+     ===================================================== */
+  footer{padding:60px 0 36px;border-top:1px solid var(--line);background:rgba(0,0,0,.25);}
+  .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:40px;margin-bottom:40px;}
+  .foot-grid p{color:#9aa0b4;font-size:14px;margin-top:14px;max-width:320px;line-height:1.6;}
+  .foot-col h5{font-size:13px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#fff;margin-bottom:16px;}
+  .foot-col a{display:block;color:#9aa0b4;font-size:14px;margin-bottom:10px;transition:color .2s;}
+  .foot-col a:hover{color:#fff;}
+  .socials{display:flex;gap:12px;margin-top:18px;}
+  .socials a{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:16px;transition:.2s;}
+  .socials a:hover{background:var(--flow);transform:translateY(-3px);}
+  .foot-bottom{border-top:1px solid var(--line);padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--muted);font-size:13px;}
+
+  /* =====================================================
+     10b. SECCIÓN AGENCIA · pilares, why-us, testimonio, sellos
+     ===================================================== */
+  /* --- pilares "Somos JFPSYSTEM" --- */
+  .agency{padding:90px 0;}
+  .agency-head{max-width:740px;margin:0 auto 50px;text-align:center;}
+  .agency-head h2{font-size:clamp(28px,5vw,46px);font-weight:900;}
+  .agency-head .lead{margin:16px auto 0;}
+  .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  .pillar{
+    background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:var(--radius);
+    padding:30px 26px;transition:transform .3s var(--ease),border-color .3s,background .3s;
+  }
+  .pillar:hover{transform:translateY(-6px);background:rgba(255,255,255,.06);border-color:rgba(80,72,229,.45);}
+  .pillar .ic{
+    width:54px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+    font-size:27px;margin-bottom:18px;background:var(--flow-soft);
+  }
+  .pillar h4{font-size:19px;color:#fff;font-weight:800;margin-bottom:9px;}
+  .pillar p{font-size:14.5px;color:#aab0c4;line-height:1.6;}
+  .pillar p b{color:#fff;}
+  .agency-cta{text-align:center;margin-top:40px;}
+
+  /* --- badge "creado por JFPSYSTEM" sobre cada producto --- */
+  .made-badge{
+    display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:800;
+    letter-spacing:1.2px;text-transform:uppercase;padding:7px 15px;border-radius:30px;
+    margin-bottom:18px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:#cfd2e2;
+  }
+  .flow .made-badge{border-color:rgba(80,72,229,.4);}
+  .eat .made-badge{border-color:rgba(249,115,22,.4);}
+
+  /* --- why-us: 3 frases con números + testimonio --- */
+  .whyus{padding:90px 0;background:rgba(255,255,255,.02);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .whyus-head{text-align:center;max-width:720px;margin:0 auto 46px;}
+  .whyus-head .lead{margin:14px auto 0;}
+  .why-nums{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:44px;}
+  .why-num{text-align:center;padding:26px 18px;border-radius:var(--radius);background:rgba(255,255,255,.035);border:1px solid var(--line);}
+  .why-num .n{font-size:clamp(34px,6vw,52px);font-weight:900;line-height:1;}
+  .why-num .l{font-size:14px;color:#c2c6d8;font-weight:600;margin-top:12px;line-height:1.45;}
+  .quote{
+    max-width:780px;margin:0 auto;background:linear-gradient(160deg,rgba(80,72,229,.12),rgba(249,115,22,.08));
+    border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:38px 40px;position:relative;
+  }
+  .quote .mark{font-size:60px;font-weight:900;line-height:.6;color:rgba(255,255,255,.16);position:absolute;top:22px;left:26px;}
+  .quote blockquote{font-size:clamp(17px,2.6vw,22px);font-weight:600;color:#eef0fa;line-height:1.55;padding-left:34px;}
+  .quote .who{display:flex;align-items:center;gap:13px;margin-top:22px;padding-left:34px;}
+  .quote .who .av{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--flow),var(--eat));display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:18px;}
+  .quote .who .name{font-weight:800;color:#fff;font-size:15px;}
+  .quote .who .role{font-size:13px;color:var(--muted);}
+
+  /* --- sello de confianza --- */
+  .trust-seal{
+    display:flex;flex-wrap:wrap;justify-content:center;gap:10px 14px;margin:0 auto 26px;
+  }
+  .trust-seal span{
+    display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#dfe2f0;
+    padding:9px 16px;border-radius:30px;background:rgba(255,255,255,.05);border:1px solid var(--line);
+  }
+  .urgent-line{text-align:center;font-size:15px;color:#c8cbdd;margin-top:8px;}
+  .urgent-line a{font-weight:800;border-bottom:1px dashed currentColor;}
+  .urgent-line .grad-eat{border-bottom:1px dashed var(--eat);}
+
+  /* --- textarea condicional del formulario --- */
+  .field textarea{
+    width:100%;padding:14px 16px;border-radius:12px;border:1.5px solid rgba(255,255,255,.16);
+    background:rgba(11,10,31,.5);color:#fff;font-size:15px;font-family:inherit;resize:vertical;min-height:90px;transition:border-color .2s;
+  }
+  .field textarea:focus{outline:none;border-color:var(--flow);}
+  .field textarea::placeholder{color:#6b7090;}
+  .field.collapsible{overflow:hidden;max-height:0;opacity:0;transition:max-height .4s var(--ease),opacity .3s,margin .4s;margin:0;}
+  .field.collapsible.open{max-height:240px;opacity:1;}
+
+  /* =====================================================
+     11. ANIMACIONES DE SCROLL
+     ===================================================== */
+  .reveal{opacity:0;transform:translateY(36px);transition:opacity .7s var(--ease),transform .7s var(--ease);}
+  .reveal.in{opacity:1;transform:translateY(0);}
+  .reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.16s}.reveal.d3{transition-delay:.24s}.reveal.d4{transition-delay:.32s}
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none;} .hero-bg .glow{animation:none;}}
+
+  /* =====================================================
+     12. RESPONSIVE  (probado a 1200 / 768 / 375)
+     ===================================================== */
+  @media (max-width:900px){
+    .benefits{grid-template-columns:repeat(2,1fr);}
+    .feat-row{grid-template-columns:1fr;gap:32px;}
+    .trust-grid{grid-template-columns:1fr;gap:30px;}
+    .compare-grid{grid-template-columns:1fr;}
+    .foot-grid{grid-template-columns:1fr 1fr;}
+    .pstats{grid-template-columns:repeat(2,1fr);gap:28px;}
+    .pillars{grid-template-columns:1fr;}
+    .why-nums{grid-template-columns:1fr;gap:18px;}
+  }
+  @media (max-width:680px){
+    .nav-links{
+      position:fixed;top:64px;left:0;right:0;flex-direction:column;gap:0;
+      background:rgba(11,10,31,.97);backdrop-filter:blur(14px);
+      border-bottom:1px solid var(--line);padding:10px 0;
+      transform:translateY(-130%);transition:transform .35s var(--ease);
+    }
+    .nav-links.open{transform:translateY(0);}
+    .nav-links a{padding:14px 24px;width:100%;border-bottom:1px solid var(--line);}
+    .nav-links .nav-cta{margin:12px 24px;text-align:center;}
+    .burger{display:flex;}
+    .hero{padding:120px 0 70px;}
+    .row2,.checks-group{grid-template-columns:1fr;}
+    .form-shell{padding:34px 22px;}
+    .product{padding:70px 0;}
+    .benefits{grid-template-columns:1fr;}
+    .foot-grid{grid-template-columns:1fr;gap:28px;}
+    .foot-bottom{flex-direction:column;}
+  }
+  @media (max-width:380px){
+    .wrap{padding:0 18px;}
+    .pstats{grid-template-columns:1fr 1fr;}
+  }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===================== NAVBAR ===================== -->
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a href="#top" class="brand">
+        <span class="mark">J</span>
+        <span>JFPSYSTEM<small>SOFTWARE A MEDIDA</small></span>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <a href="#somos">Empresa</a>
+        <a href="#flowtock">Flowtock</a>
+        <a href="#eattock">EatTock</a>
+        <a href="#porque">Por qué JFPSYSTEM</a>
+        <a href="#espera" class="btn btn-flow nav-cta">Unirme a la lista →</a>
+      </nav>
+      <button class="burger" id="burger" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===================== HERO ===================== -->
+  <section class="hero" id="top">
+    <div class="hero-bg">
+      <div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div>
+      <div class="grid-lines"></div>
+    </div>
+    <div class="wrap hero-inner">
+      <div class="badge reveal"><span class="dot"></span> Pre-lanzamiento 2026 · Cupos de acceso anticipado abiertos</div>
+      <h1 class="reveal d1">Dos productos que ponen<br><span class="grad-flow">tu negocio</span> en <span class="grad-eat">piloto automático</span></h1>
+      <p class="sub reveal d2">
+        JFPSYSTEM presenta <b style="color:#fff">Flowtock</b>, el ERP en la nube que ordena toda tu empresa,
+        y <b style="color:#fff">EatTock</b>, la suite que digitaliza tu restaurante de la mesa a SUNAT.
+        Únete a la lista de espera y reclama la oferta de lanzamiento.
+      </p>
+      <div class="hero-cta reveal d3">
+        <a href="#flowtock" class="btn btn-flow">📦 Ver Flowtock</a>
+        <a href="#eattock" class="btn btn-eat">🍽️ Ver EatTock</a>
+      </div>
+      <div class="hero-proof reveal d4">
+        <span>⭐ <b>+15 empresas</b> ya en lista de espera</span>
+        <span>🇵🇪 Hecho para la normativa <b>SUNAT</b></span>
+        <span>☁️ <b>100%</b> en la nube</span>
+        <span>🔒 Datos respaldados <b>24/7</b></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== JFPSYSTEM (CONFIANZA) ===================== -->
+  <section class="trust">
+    <div class="wrap trust-grid">
+      <div class="reveal">
+        <span class="eyebrow grad-flow">SOMOS JFPSYSTEM</span>
+        <p class="big">
+          Somos un equipo de <b>arquitectos de software y ex-CTOs</b> que construye <b>software a medida</b>
+          para logística, retail y servicios. Llevamos proyectos <b>desde el MVP hasta sistemas enterprise</b>,
+          y esa misma experiencia se convirtió en nuestros <b>productos propios</b>: Flowtock y EatTock.
+        </p>
+      </div>
+      <div class="trust-stats reveal d2">
+        <div><div class="n grad-flow">+6</div><div class="l">Años desarrollando software</div></div>
+        <div><div class="n grad-eat">2</div><div class="l">Productos en pre-lanzamiento</div></div>
+        <div><div class="n grad-flow">26+</div><div class="l">Módulos entre ambos productos</div></div>
+        <div><div class="n grad-eat">100%</div><div class="l">Cumplimiento SUNAT nativo</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SOMOS JFPSYSTEM (AGENCIA / PILARES) ===================== -->
+  <section class="agency" id="somos">
+    <div class="wrap">
+      <div class="agency-head reveal">
+        <span class="eyebrow grad-flow">DESARROLLO A MEDIDA DE ALTO RENDIMIENTO</span>
+        <h2>Software a medida. Entregas ultrarrápidas. <span class="grad-flow">Sin burocracia.</span></h2>
+        <p class="lead">
+          No vendemos licencias genéricas. Creamos la herramienta exacta que tu negocio necesita,
+          en la <b style="color:#fff">mitad del tiempo</b> que una consultora tradicional.
+        </p>
+      </div>
+
+      <div class="pillars">
+        <div class="pillar reveal">
+          <div class="ic">⚡</div>
+          <h4>Velocidad real</h4>
+          <p>Entregamos valor rápido: tu sistema en <b>4–8 semanas</b>, frente a los 6 meses del mercado. Metodología ágil, sprints y entregas que ves funcionando desde la primera semana.</p>
+        </div>
+        <div class="pillar reveal d1">
+          <div class="ic">🎯</div>
+          <h4>100% a medida</h4>
+          <p>Desde un ERP completo hasta automatismos puntuales. <b>Tú pones la regla de negocio, nosotros el código.</b> Sin licencias perpetuas ni funciones que nunca usarás.</p>
+        </div>
+        <div class="pillar reveal d2">
+          <div class="ic">🛡️</div>
+          <h4>Calidad enterprise</h4>
+          <p>Pruebas automáticas, CI/CD, documentación y soporte post-lanzamiento. Software <b>escalable</b> que crece del MVP al sistema corporativo sin reescribirlo.</p>
+        </div>
+      </div>
+
+      <div class="agency-cta reveal d2">
+        <a href="#espera" class="btn btn-flow" data-prefill="custom">Habla con un experto →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FLOWTOCK ===================== -->
+  <section class="product flow" id="flowtock">
+    <div class="wrap">
+      <div class="product-head reveal">
+        <span class="made-badge">🏭 Creado por JFPSYSTEM • Desarrollo a medida</span>
+        <div class="product-logo">
+          <span class="mark">F</span>
+          <span class="name">Flowtock<small>CLOUD ERP</small></span>
+        </div>
+        <h2 class="tagline">El ERP que hace crecer <span class="grad-flow">tu empresa</span></h2>
+        <p class="lead">
+          Compras, ventas, inventario, cobranza y facturación electrónica SUNAT — todo en una sola plataforma
+          en la nube. <b style="color:#fff">Control total y automatización inteligente</b> para ferreterías,
+          distribuidoras, importadoras y manufactura.
+        </p>
+        <div class="pain reveal">
+          <div class="pain-t">⚠️ Si lo sigues haciendo a la antigua…</div>
+          Tu información vive en <b>cuadernos, Excel y la cabeza de alguien</b>. Vendes sin saber tu stock,
+          facturar a SUNAT es un dolor de cabeza y nunca sabes quién te debe. Cada día pierdes dinero
+          que ni siquiera ves.
+        </div>
+      </div>
+
+      <!-- Beneficios -->
+      <div class="benefits">
+        <div class="bcard reveal">
+          <div class="ic">🔗</div>
+          <h4>Todo integrado</h4>
+          <p>Lo que vendes descuenta del stock; lo que compras lo aumenta. Un solo sistema, sin islas de información.</p>
+        </div>
+        <div class="bcard reveal d1">
+          <div class="ic">🧾</div>
+          <h4>Hecho para Perú</h4>
+          <p>Facturación electrónica, GRE, libros PLE y detracciones nativas. Cumple con SUNAT sin sustos ni multas.</p>
+        </div>
+        <div class="bcard reveal d2">
+          <div class="ic">📦</div>
+          <h4>Stock en tiempo real</h4>
+          <p>Kardex valorizado FIFO/LIFO/promedio, lotes, vencimientos y alertas de reposición automáticas.</p>
+        </div>
+        <div class="bcard reveal d3">
+          <div class="ic">📊</div>
+          <h4>Decisiones con datos</h4>
+          <p>Dashboards con KPIs en vivo, márgenes por categoría y reportes que antes tomaban días, al instante.</p>
+        </div>
+      </div>
+
+      <!-- Funcionalidades + mockup -->
+      <div class="feat-row">
+        <div class="reveal">
+          <span class="eyebrow grad-flow">FUNCIONALIDADES DESTACADAS</span>
+          <ul class="feat-list">
+            <li><span class="chk">✓</span><span><b>Facturación SUNAT en segundos:</b> factura, boleta, notas y guías GRE con CDR de respuesta automático.</span></li>
+            <li><span class="chk">✓</span><span><b>Compras con trazabilidad total:</b> importa el XML del proveedor y registra en segundos; cada recepción suma stock.</span></li>
+            <li><span class="chk">✓</span><span><b>Cobranza y cuentas por cobrar:</b> antigüedad de saldos, abonos parciales y flujo de caja proyectado.</span></li>
+            <li><span class="chk">✓</span><span><b>Multi-sucursal y multi-almacén:</b> cada sede con su operación; visión consolidada para gerencia.</span></li>
+            <li><span class="chk">✓</span><span><b>Producción y BOM, multi-moneda, listas de precios</b> y roles con auditoría completa de cada cambio.</span></li>
+          </ul>
+          <div class="chips">
+            <span class="chip">Compras</span><span class="chip">Ventas</span><span class="chip">Almacén</span>
+            <span class="chip">Producción</span><span class="chip">Facturación SUNAT</span><span class="chip">Reportes</span>
+            <span class="chip">Seguridad</span><span class="chip">Sucursales</span>
+          </div>
+        </div>
+        <!-- mockup dashboard -->
+        <div class="reveal d2">
+          <div class="mock">
+            <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span class="url">app.flowtock.app/dashboard</span></div>
+            <div class="mock-body">
+              <div class="mock-h">Resumen del negocio</div>
+              <div class="kpis">
+                <div class="kpi"><div class="l">Ventas mes</div><div class="v">S/ 84.2k</div><div class="d up">▲ 12.4%</div></div>
+                <div class="kpi"><div class="l">Margen</div><div class="v">38.6%</div><div class="d up">▲ 2.0%</div></div>
+                <div class="kpi"><div class="l">Por cobrar</div><div class="v">S/ 22.9k</div><div class="d dn">8 clientes</div></div>
+                <div class="kpi"><div class="l">Stock crítico</div><div class="v">7 ítems</div><div class="d dn">reponer</div></div>
+              </div>
+              <div class="bars" data-bars>
+                <div class="bc" style="height:42%"></div><div class="bc" style="height:55%"></div>
+                <div class="bc" style="height:48%"></div><div class="bc" style="height:67%"></div>
+                <div class="bc" style="height:60%"></div><div class="bc" style="height:74%"></div>
+                <div class="bc" style="height:82%"></div><div class="bc" style="height:90%"></div>
+                <div class="bc" style="height:100%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="pstats">
+        <div class="reveal"><div class="n grad-flow">-30%</div><div class="l">Tiempo en registrar compras</div></div>
+        <div class="reveal d1"><div class="n grad-flow">100%</div><div class="l">Trazabilidad del gasto</div></div>
+        <div class="reveal d2"><div class="n grad-flow">8</div><div class="l">Módulos integrados</div></div>
+        <div class="reveal d3"><div class="n grad-flow">24/7</div><div class="l">Disponibilidad en la nube</div></div>
+      </div>
+
+      <div class="product-cta reveal">
+        <a href="#espera" class="btn btn-flow" data-prefill="flowtock">Quiero acceso anticipado a Flowtock →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== EATTOCK ===================== -->
+  <section class="product eat" id="eattock">
+    <div class="wrap">
+      <div class="product-head reveal">
+        <span class="made-badge">🏭 Creado por JFPSYSTEM • Desarrollo a medida</span>
+        <div class="product-logo">
+          <span class="mark">E</span>
+          <span class="name">EatTock<small>SUITE RESTAURANTE</small></span>
+        </div>
+        <h2 class="tagline">Todo tu restaurante, en <span class="grad-eat">un solo sistema</span></h2>
+        <p class="lead">
+          Una sola plataforma que conecta <b style="color:#fff">venta → cocina → inventario → costeo → caja → SUNAT</b>,
+          con reportes en vivo para el dueño. Operaciones sin estrés, menos mermas y más rentabilidad.
+        </p>
+        <div class="pain reveal">
+          <div class="pain-t">⚠️ Sin un sistema que lo conecte todo…</div>
+          La caja por un lado, el inventario en un cuaderno, las recetas en la cabeza del chef y SUNAT a último minuto.
+          <b>Filas en caja, comandas perdidas, robo hormiga y costos que nadie calcula.</b> Así se pierde dinero todos los días.
+        </div>
+      </div>
+
+      <!-- Beneficios -->
+      <div class="benefits">
+        <div class="bcard reveal">
+          <div class="ic">🛎️</div>
+          <h4>Vende más rápido</h4>
+          <p>POS de salón, barra, para llevar y delivery. Cobro mixto, Yape/Plin, propinas y auto-pedido por QR.</p>
+        </div>
+        <div class="bcard reveal d1">
+          <div class="ic">👨‍🍳</div>
+          <h4>Cocina sincronizada</h4>
+          <p>Comanda térmica + pantalla KDS en tiempo real por estación. Cero comandas perdidas, cero gritos.</p>
+        </div>
+        <div class="bcard reveal d2">
+          <div class="ic">📋</div>
+          <h4>Sabe qué te cuesta</h4>
+          <p>Food Cost %, sub-recetas, costo promedio y menu engineering: descubre tus platos estrella y los muertos.</p>
+        </div>
+        <div class="bcard reveal d3">
+          <div class="ic">📦</div>
+          <h4>Adiós al robo hormiga</h4>
+          <p>Inventario por almacén, lotes, mermas y descartables descontados automáticamente por cada plato vendido.</p>
+        </div>
+      </div>
+
+      <!-- Funcionalidades + mockup -->
+      <div class="feat-row">
+        <!-- mockup KDS / ventas -->
+        <div class="reveal d2">
+          <div class="mock">
+            <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span class="url">app.eattock.app/reportes-del-dueño</span></div>
+            <div class="mock-body">
+              <div class="mock-h">Reportes del dueño · hoy</div>
+              <div class="kpis">
+                <div class="kpi"><div class="l">Venta del día</div><div class="v">S/ 6,480</div><div class="d up">▲ 9.1%</div></div>
+                <div class="kpi"><div class="l">Food Cost</div><div class="v">31.2%</div><div class="d up">objetivo ✓</div></div>
+                <div class="kpi"><div class="l">Ticket prom.</div><div class="v">S/ 42</div><div class="d up">▲ S/ 3</div></div>
+                <div class="kpi"><div class="l">Mermas</div><div class="v">S/ 120</div><div class="d dn">-18%</div></div>
+              </div>
+              <div class="bars" data-bars>
+                <div class="bc" style="height:38%"></div><div class="bc" style="height:50%"></div>
+                <div class="bc" style="height:46%"></div><div class="bc" style="height:62%"></div>
+                <div class="bc" style="height:70%"></div><div class="bc" style="height:58%"></div>
+                <div class="bc" style="height:84%"></div><div class="bc" style="height:96%"></div>
+                <div class="bc" style="height:72%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reveal">
+          <span class="eyebrow grad-eat">FUNCIONALIDADES DESTACADAS</span>
+          <ul class="feat-list">
+            <li><span class="chk">✓</span><span><b>Hecho para Perú:</b> modificadores ("sin cebolla, extra queso"), menú del día, combos y venta por peso/fracción (¼·½ pollo).</span></li>
+            <li><span class="chk">✓</span><span><b>SUNAT sin frenar la venta:</b> boleta, factura, nota de venta diaria, consolidado semanal y <b>modo contingencia offline</b>.</span></li>
+            <li><span class="chk">✓</span><span><b>Caja cuadrada cada día:</b> apertura, arqueo, ingresos/egresos y corrección de medio de pago antes del cierre.</span></li>
+            <li><span class="chk">✓</span><span><b>Módulo de Calidad con muestreo:</b> acepta o rechaza lotes en la recepción. Único en su categoría.</span></li>
+            <li><span class="chk">✓</span><span><b>Fidelización 360:</b> puntos, cashback, gift cards, cupones, NPS y promos geolocalizadas para que vuelvan y gasten más.</span></li>
+          </ul>
+          <div class="chips">
+            <span class="chip">POS &amp; Salón</span><span class="chip">Cocina / KDS</span><span class="chip">Inventario</span>
+            <span class="chip">Recetas &amp; Costos</span><span class="chip">Compras</span><span class="chip">SUNAT</span>
+            <span class="chip">Reportes &amp; BI</span><span class="chip">Fidelización</span><span class="chip">Tesorería</span>
+            <span class="chip">Carta QR</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="pstats">
+        <div class="reveal"><div class="n grad-eat">18</div><div class="l">Módulos en una plataforma</div></div>
+        <div class="reveal d1"><div class="n grad-eat">offline</div><div class="l">Sigues vendiendo si cae SUNAT</div></div>
+        <div class="reveal d2"><div class="n grad-eat">-18%</div><div class="l">Mermas con control de inventario</div></div>
+        <div class="reveal d3"><div class="n grad-eat">14 días</div><div class="l">De prueba, sin permanencia</div></div>
+      </div>
+
+      <div class="product-cta reveal">
+        <a href="#espera" class="btn btn-eat" data-prefill="eattock">Quiero acceso anticipado a EatTock →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== COMPARATIVA ANTES / DESPUÉS ===================== -->
+  <section class="compare" id="comparativa">
+    <div class="wrap">
+      <div class="compare-head reveal">
+        <span class="eyebrow grad-flow">EL ANTES Y EL DESPUÉS</span>
+        <h2 class="section-title">Lo que cambia el <span class="grad-flow">día que digitalizas</span></h2>
+        <p class="lead">Dos realidades muy distintas. Esto es lo que dejas atrás y lo que ganas con cada producto.</p>
+      </div>
+
+      <div class="compare-grid">
+        <!-- Flowtock -->
+        <div class="ba-card reveal">
+          <div class="title"><span class="mini-mark mini-flow">F</span> Flowtock · tu empresa</div>
+          <div class="ba-col ba-before">
+            <div class="ba-tag">😩 Antes</div>
+            <div class="ba-row"><span class="i">📉</span> No sabes cuánto tienes en stock; vendes sin existencias</div>
+            <div class="ba-row"><span class="i">🧾</span> Facturar a SUNAT con sistemas separados y rechazos</div>
+            <div class="ba-row"><span class="i">💸</span> Cobranzas que se pierden y caja imposible de proyectar</div>
+            <div class="ba-row"><span class="i">🗂️</span> Reportes que toman días y nunca están al día</div>
+          </div>
+          <div class="ba-col ba-after">
+            <div class="ba-tag">🚀 Después</div>
+            <div class="ba-row"><span class="i">📦</span> Stock en tiempo real con alertas de reposición</div>
+            <div class="ba-row"><span class="i">⚡</span> Factura y boleta a SUNAT en segundos, con CDR</div>
+            <div class="ba-row"><span class="i">💰</span> Sabes quién te debe y proyectas tu flujo de caja</div>
+            <div class="ba-row"><span class="i">📊</span> Dashboard con KPIs en vivo, listo cada mañana</div>
+          </div>
+        </div>
+
+        <!-- EatTock -->
+        <div class="ba-card reveal d2">
+          <div class="title"><span class="mini-mark mini-eat">E</span> EatTock · tu restaurante</div>
+          <div class="ba-col ba-before">
+            <div class="ba-tag">😩 Antes</div>
+            <div class="ba-row"><span class="i">⏳</span> Filas en caja y comandas que se pierden camino a la cocina</div>
+            <div class="ba-row"><span class="i">🐜</span> Robo hormiga y mermas que nadie controla</div>
+            <div class="ba-row"><span class="i">❓</span> Nadie sabe cuánto cuesta realmente cada plato</div>
+            <div class="ba-row"><span class="i">📵</span> Si cae SUNAT, dejas de vender</div>
+          </div>
+          <div class="ba-col ba-after">
+            <div class="ba-tag">🚀 Después</div>
+            <div class="ba-row"><span class="i">🛎️</span> POS rápido y comanda al KDS en tiempo real</div>
+            <div class="ba-row"><span class="i">📦</span> Inventario, lotes y descartables descontados solos</div>
+            <div class="ba-row"><span class="i">📋</span> Food Cost y margen por plato, al instante</div>
+            <div class="ba-row"><span class="i">🔌</span> Modo offline: sigues vendiendo y sincronizas después</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== POR QUÉ JFPSYSTEM (PRUEBA SOCIAL) ===================== -->
+  <section class="whyus" id="porque">
+    <div class="wrap">
+      <div class="whyus-head reveal">
+        <span class="eyebrow grad-eat">CONFIANZA QUE SE MIDE</span>
+        <h2 class="section-title">¿Por qué las empresas eligen <span class="grad-flow">JFPSYSTEM</span> para sus desarrollos?</h2>
+        <p class="lead">Casos reales de logística, retail y servicios. Entregamos valor rápido, con calidad enterprise y software escalable que se queda contigo.</p>
+      </div>
+
+      <div class="why-nums">
+        <div class="why-num reveal"><div class="n grad-flow">76%</div><div class="l">menos tiempo de espera vs desarrollo tradicional</div></div>
+        <div class="why-num reveal d1"><div class="n grad-eat">+40</div><div class="l">proyectos a medida entregados en 24 meses</div></div>
+        <div class="why-num reveal d2"><div class="n grad-flow">100%</div><div class="l">de los clientes renueva su soporte anual</div></div>
+      </div>
+
+      <div class="quote reveal d1">
+        <span class="mark">“</span>
+        <blockquote>JFPSYSTEM nos construyó un sistema de gestión de inventario multicanal en <b style="color:#fff">6 semanas</b>. Otra consultora pedía 4 meses.</blockquote>
+        <div class="who">
+          <span class="av">RL</span>
+          <span>
+            <span class="name">Gerente de Logística</span>
+            <span class="role">Empresa del sector retail</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FORMULARIO DE ESPERA ===================== -->
+  <section class="waitlist" id="espera">
+    <div class="wrap">
+      <div class="form-shell reveal">
+        <!-- Formulario -->
+        <div id="formView">
+          <div class="form-head">
+            <div class="scarcity">🔥 Cupos limitados para el lote de lanzamiento — los primeros tienen tarifa preferencial</div>
+            <h2>Únete a la lista de espera <span class="grad-flow">+</span> <span class="grad-eat">oferta de lanzamiento</span></h2>
+            <p>¿Quieres un producto estrella o necesitas algo a medida? Lo hacemos. Déjanos tus datos y te respondemos en corto tiempo.</p>
+          </div>
+
+          <!-- Sello de confianza -->
+          <div class="trust-seal reveal">
+            <span>⚡ Desarrollo ágil</span>
+            <span>🛡️ Seguridad enterprise</span>
+            <span>🎧 Soporte dedicado 24/5 · SLA 99.9%</span>
+          </div>
+
+          <form id="waitForm" novalidate>
+            <div class="field" id="f-busca">
+              <label for="busca">¿Qué buscas? *</label>
+              <select id="busca" name="busca">
+                <option value="">Selecciona una opción…</option>
+                <option value="Quiero Flowtock">Quiero Flowtock</option>
+                <option value="Quiero EatTock">Quiero EatTock</option>
+                <option value="Quiero ambos productos">Quiero ambos productos</option>
+                <option value="Necesito un desarrollo a medida urgente">Necesito un desarrollo a medida urgente</option>
+              </select>
+              <div class="err-msg">Cuéntanos qué buscas.</div>
+            </div>
+
+            <!-- Campo extra que aparece solo para desarrollo a medida -->
+            <div class="field collapsible" id="f-idea">
+              <label for="idea">Cuéntanos tu idea (opcional)</label>
+              <textarea id="idea" name="idea" placeholder="Ej. Necesito un sistema de inventario multicanal integrado con mi e-commerce, idealmente en menos de 6 semanas…"></textarea>
+            </div>
+
+            <div class="row2">
+              <div class="field" id="f-nombre">
+                <label for="nombre">Nombre completo</label>
+                <input type="text" id="nombre" name="nombre" placeholder="Ej. María Quispe" />
+                <div class="err-msg">Cuéntanos tu nombre.</div>
+              </div>
+              <div class="field" id="f-email">
+                <label for="email">Correo electrónico *</label>
+                <input type="email" id="email" name="email" placeholder="tucorreo@empresa.com" />
+                <div class="err-msg">Ingresa un correo válido.</div>
+              </div>
+            </div>
+
+            <div class="field" id="f-productos">
+              <label>Producto(s) de interés <span style="color:var(--muted);font-weight:600">(se autocompletan según tu elección)</span></label>
+              <div class="checks-group">
+                <label class="check-card flow-pick">
+                  <input type="checkbox" name="producto" value="Flowtock" />
+                  <span><span class="cc-name">📦 Flowtock</span><span class="cc-sub">ERP para tu empresa</span></span>
+                </label>
+                <label class="check-card eat-pick">
+                  <input type="checkbox" name="producto" value="EatTock" />
+                  <span><span class="cc-name">🍽️ EatTock</span><span class="cc-sub">Suite para restaurantes</span></span>
+                </label>
+              </div>
+              <div class="err-msg">Elige al menos un producto.</div>
+            </div>
+
+            <div class="field" id="f-rol">
+              <label for="rol">¿Cuál es tu rol?</label>
+              <select id="rol" name="rol">
+                <option value="">Selecciona una opción…</option>
+                <option value="Dueño / Gerente general">Dueño / Gerente general</option>
+                <option value="Gerente / Administrador">Gerente / Administrador</option>
+                <option value="Desarrollador / TI">Desarrollador / TI</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn-flow btn-submit">Recibir novedades + oferta de lanzamiento</button>
+            <p class="form-note">Sin spam. Solo te escribimos cuando haya algo que de verdad valga la pena. 🔒</p>
+            <p class="urgent-line">¿Necesitas un <b>desarrollo a medida urgente</b>? <span class="grad-eat">También lo hacemos.</span></p>
+          </form>
+        </div>
+
+        <!-- Mensaje de éxito (oculto por defecto) -->
+        <div class="success" id="successView">
+          <div class="tick">✓</div>
+          <h3>¡Estás dentro! 🎉</h3>
+          <p id="successMsg">Te enviamos un correo de confirmación. Serás de los primeros en recibir el acceso anticipado y la oferta de lanzamiento.</p>
+          <button class="btn btn-ghost" style="margin-top:24px" id="resetForm">Registrar otro interés</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer>
+    <div class="wrap">
+      <div class="foot-grid">
+        <div>
+          <a href="#top" class="brand">
+            <span class="mark">J</span>
+            <span>JFPSYSTEM<small>SOFTWARE A MEDIDA</small></span>
+          </a>
+          <p>Software peruano hecho a medida. Creadores de Flowtock y EatTock. Tecnología confiable que crece con tu negocio.</p>
+          <div class="socials">
+            <a href="#" aria-label="Facebook" title="Facebook (placeholder)">f</a>
+            <a href="#" aria-label="Instagram" title="Instagram (placeholder)">◎</a>
+            <a href="#" aria-label="LinkedIn" title="LinkedIn (placeholder)">in</a>
+            <a href="#" aria-label="WhatsApp" title="WhatsApp (placeholder)">✆</a>
+          </div>
+        </div>
+        <div class="foot-col">
+          <h5>Productos</h5>
+          <a href="#flowtock">Flowtock · Cloud ERP</a>
+          <a href="#eattock">EatTock · Restaurantes</a>
+          <a href="#comparativa">Antes / Después</a>
+          <a href="#espera">Acceso anticipado</a>
+        </div>
+        <div class="foot-col">
+          <h5>Contacto</h5>
+          <a href="mailto:helpdesk@pulsosalud.com">✉️ helpdesk@pulsosalud.com</a>
+          <a href="tel:+51997964478">📞 997 964 478</a>
+          <a href="#">🌐 jfpsystem.com</a>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <span>© <span id="year"></span> JFPSYSTEM. Todos los derechos reservados.</span>
+        <span>Flowtock · EatTock — Pre-lanzamiento 2026 🇵🇪</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =====================================================
+       JAVASCRIPT VANILLA
+       ===================================================== -->
+  <script>
+  (function(){
+    'use strict';
+
+    /* ---------- Año dinámico en el footer ---------- */
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    /* ---------- Menú móvil ---------- */
+    var burger = document.getElementById('burger');
+    var navLinks = document.getElementById('navLinks');
+    burger.addEventListener('click', function(){
+      navLinks.classList.toggle('open');
+    });
+    // cerrar el menú al hacer clic en un enlace
+    navLinks.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', function(){ navLinks.classList.remove('open'); });
+    });
+
+    /* ---------- Navbar: fondo más opaco al hacer scroll ---------- */
+    var nav = document.querySelector('header.nav');
+    window.addEventListener('scroll', function(){
+      nav.style.background = window.scrollY > 30 ? 'rgba(11,10,31,.92)' : 'rgba(11,10,31,.6)';
+    });
+
+    /* ---------- Animaciones de scroll (IntersectionObserver) ---------- */
+    var revealEls = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if (e.isIntersecting) {
+            e.target.classList.add('in');
+            io.unobserve(e.target); // animar una sola vez
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+      revealEls.forEach(function(el){ io.observe(el); });
+    } else {
+      // fallback: mostrar todo
+      revealEls.forEach(function(el){ el.classList.add('in'); });
+    }
+
+    /* ---------- Select "¿Qué buscas?": sincroniza checkboxes y campo de idea ---------- */
+    var buscaSelect = document.getElementById('busca');
+    var ideaField = document.getElementById('f-idea');
+    var flowBox = document.querySelector('input[name="producto"][value="Flowtock"]');
+    var eatBox  = document.querySelector('input[name="producto"][value="EatTock"]');
+
+    function applyBusca(){
+      var v = buscaSelect.value;
+      var isCustom = (v === 'Necesito un desarrollo a medida urgente');
+
+      // marcar productos según la intención
+      if (flowBox) flowBox.checked = (v === 'Quiero Flowtock' || v === 'Quiero ambos productos');
+      if (eatBox)  eatBox.checked  = (v === 'Quiero EatTock' || v === 'Quiero ambos productos');
+      [flowBox, eatBox].forEach(function(cb){ if (cb) cb.dispatchEvent(new Event('change')); });
+
+      // mostrar/ocultar el campo "cuéntanos tu idea" (solo desarrollo a medida)
+      ideaField.classList.toggle('open', isCustom);
+
+      // limpiar error del select al elegir algo
+      if (v) setError('f-busca', false);
+    }
+    buscaSelect.addEventListener('change', applyBusca);
+
+    /* ---------- Botones "acceso anticipado" / "habla con un experto": preseleccionan ---------- */
+    var prefillMap = {
+      flowtock: 'Quiero Flowtock',
+      eattock:  'Quiero EatTock',
+      custom:   'Necesito un desarrollo a medida urgente'
+    };
+    document.querySelectorAll('[data-prefill]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var key = btn.getAttribute('data-prefill'); // 'flowtock' | 'eattock' | 'custom'
+        if (prefillMap[key]) {
+          buscaSelect.value = prefillMap[key];
+          applyBusca();
+        }
+      });
+    });
+
+    /* ---------- Estilo visual de los checkboxes seleccionados ---------- */
+    document.querySelectorAll('.check-card input').forEach(function(cb){
+      var sync = function(){ cb.closest('.check-card').classList.toggle('on', cb.checked); };
+      cb.addEventListener('change', sync);
+      sync();
+    });
+
+    /* ---------- Validación + envío simulado del formulario ---------- */
+    var form = document.getElementById('waitForm');
+    var emailInput = document.getElementById('email');
+
+    function setError(fieldId, on){
+      document.getElementById(fieldId).classList.toggle('has-error', on);
+    }
+    function isValidEmail(v){
+      // validación básica: no vacío + formato razonable
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+    }
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault(); // no recargar
+
+      var ok = true;
+      var isCustom = (buscaSelect.value === 'Necesito un desarrollo a medida urgente');
+
+      // "¿Qué buscas?" (obligatorio)
+      setError('f-busca', buscaSelect.value === '');
+      if (buscaSelect.value === '') ok = false;
+
+      // Email (obligatorio)
+      if (!isValidEmail(emailInput.value)) {
+        setError('f-email', true);
+        emailInput.classList.add('invalid');
+        ok = false;
+      } else {
+        setError('f-email', false);
+        emailInput.classList.remove('invalid');
+      }
+
+      // Producto: obligatorio salvo que sea desarrollo a medida
+      var checked = form.querySelectorAll('input[name="producto"]:checked');
+      var needsProduct = !isCustom && buscaSelect.value !== '';
+      setError('f-productos', needsProduct && checked.length === 0);
+      if (needsProduct && checked.length === 0) ok = false;
+
+      if (!ok) {
+        // enfocar el primer error
+        var firstErr = form.querySelector('.has-error input, .has-error select, .has-error textarea');
+        if (firstErr) firstErr.focus();
+        return;
+      }
+
+      // --- Éxito (simulado, sin backend) ---
+      var nombre = document.getElementById('nombre').value.trim();
+      var saludo = nombre ? (nombre.split(' ')[0] + ', ') : '';
+      var msg;
+
+      if (isCustom) {
+        msg = saludo + 'recibimos tu solicitud de desarrollo a medida. Un arquitecto de software te contactará en corto tiempo para conversar tu idea y darte un estimado de entrega (normalmente 4–8 semanas). 🚀';
+      } else {
+        var productos = Array.prototype.map.call(checked, function(c){ return c.value; }).join(' y ');
+        msg = saludo + 'quedaste en la lista de espera de ' + productos +
+          '. Te escribiremos al correo con tu acceso anticipado y la oferta de lanzamiento. 🚀';
+      }
+      document.getElementById('successMsg').textContent = msg;
+
+      document.getElementById('formView').style.display = 'none';
+      document.getElementById('successView').classList.add('show');
+      document.getElementById('successView').scrollIntoView({ behavior:'smooth', block:'center' });
+
+      // Aquí se conectaría un backend / servicio de email real:
+      // fetch('/api/waitlist', { method:'POST', body: new FormData(form) })
+    });
+
+    // limpiar el estado de error al escribir/cambiar
+    emailInput.addEventListener('input', function(){
+      setError('f-email', false);
+      emailInput.classList.remove('invalid');
+    });
+    form.querySelectorAll('input[name="producto"]').forEach(function(cb){
+      cb.addEventListener('change', function(){ setError('f-productos', false); });
+    });
+
+    /* ---------- Botón "registrar otro interés" ---------- */
+    document.getElementById('resetForm').addEventListener('click', function(){
+      form.reset();
+      document.querySelectorAll('.check-card').forEach(function(c){ c.classList.remove('on'); });
+      ideaField.classList.remove('open');
+      ['f-busca','f-email','f-productos'].forEach(function(id){ setError(id, false); });
+      emailInput.classList.remove('invalid');
+      document.getElementById('successView').classList.remove('show');
+      document.getElementById('formView').style.display = 'block';
+      document.getElementById('formView').scrollIntoView({ behavior:'smooth', block:'center' });
+    });
+
+  })();
+  </script>
+</body>
+</html>
